@@ -1,0 +1,37 @@
+1. 
+SELECT  a.emp_name, a.job_name, a.dep_id, a.salary, b.salary AS manager_salary
+FROM employees a, employees b
+WHERE b.emp_id = a.manager_id
+AND a.salary > b.salary
+
+2. 
+SELECT a.emp_name, a.job_name, a.dep_id, a.salary
+FROM   employee a
+WHERE  a.salary = (SELECT MIN(salary) FROM employee b
+                  WHERE  b.dep_id = a.dep_id)
+
+3. 
+SELECT dep_id
+FROM employees
+GROUP BY dep_id
+HAVING COUNT(*) ​> 3;
+
+4. 
+SELECT a.emp_name, a.job_name, d.dep_name
+FROM employees a
+LEFT JOIN employees b ON (b.emp_id = a.manager_id AND b.dep_id = a.dep_id)
+INNER JOIN department d ON a.dep_id = d.dep_id
+WHERE b.emp_id IS null
+
+5. 
+SELECT e.emp_name, e.job_name, e.dep_id, DATEDIFF(CURDATE(), e.hire_date) AS exp, grade FROM employees e, salary_grade
+WHERE min_sal <= e.salary
+AND max_sal >= e.salary
+ORDER BY exp DESC;
+
+6. 
+SELECT COUNT(*), grade FROM salary_grade, employees e
+WHERE min_sal <= e.salary
+AND max_sal >= e.salary
+GROUP BY grade
+ORDER BY grade DESC

@@ -1,5 +1,8 @@
 .DS_Store
 project/.DS_Store
 project/project/.DS_Store
+target
+project/target
+project/project/target
 .idea
 .bsp

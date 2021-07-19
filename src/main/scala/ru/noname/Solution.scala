@@ -21,7 +21,7 @@ object Solution {
       .options(Map("delimiter" -> "\t"))
       .format("csv")
       .schema(customerSchema)
-      .load("sol/customer.csv")
+      .load("resources/customer.csv")
     customerDF.createTempView("customers")
 
     val productSchema = new StructType()
@@ -33,7 +33,7 @@ object Solution {
       .options(Map("delimiter" -> "\t"))
       .format("csv")
       .schema(productSchema)
-      .load("sol/product.csv")
+      .load("resources/product.csv")
     productDF.createTempView("products")
 
     val orderSchema = new StructType()
@@ -47,7 +47,7 @@ object Solution {
       .options(Map("delimiter" -> "\t"))
       .format("csv")
       .schema(orderSchema)
-      .load("sol/order.csv")
+      .load("resources/order.csv")
 
     val sumProductsByIDs = orderDF
       .filter("status = 'delivered'")

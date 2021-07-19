@@ -13,8 +13,10 @@ val sparkVersion = "2.4.0"
 //  )
 
 ThisBuild / libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion
+  ("org.apache.spark" %% "spark-core" % sparkVersion)
+    .exclude("org.apache.hadoop","hadoop-hdfs"),
+  ("org.apache.spark" %% "spark-sql" % sparkVersion)
+    .exclude("org.apache.hadoop","hadoop-hdfs")
 )
 
 ThisBuild / assemblyMergeStrategy := {

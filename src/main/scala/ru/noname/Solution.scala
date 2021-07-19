@@ -2,10 +2,17 @@ package ru.noname
 
 import org.apache.spark.sql.functions.{max, sum}
 import org.apache.spark.sql.types._
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 object Solution {
   def main(args: Array[String]): Unit = {
+
+    if(args.length != 2) {
+      println("need exact 2 arguments: <inputPath> <outputPath>")
+      System.exit(0)
+    }
+    val inputPath = args(0)
+    val outputPath = args(1)
 
     val spark = SparkSession.builder
       .appName("Solution")
@@ -21,7 +28,7 @@ object Solution {
       .options(Map("delimiter" -> "\t"))
       .format("csv")
       .schema(customerSchema)
-      .load("resources/customer.csv")
+      .load(s"$inputPath/customer.csv")
     customerDF.createTempView("customers")
 
     val productSchema = new StructType()
@@ -33,7 +40,7 @@ object Solution {
       .options(Map("delimiter" -> "\t"))
       .format("csv")
       .schema(productSchema)
-      .load("resources/product.csv")
+      .load(s"$inputPath/product.csv")
     productDF.createTempView("products")
 
     val orderSchema = new StructType()
@@ -47,7 +54,7 @@ object Solution {
       .options(Map("delimiter" -> "\t"))
       .format("csv")
       .schema(orderSchema)
-      .load("resources/order.csv")
+      .load(s"$inputPath/order.csv")
 
     val sumProductsByIDs = orderDF
       .filter("status = 'delivered'")
@@ -67,7 +74,7 @@ object Solution {
         |INNER JOIN products p ON o.productID = p.id
         |INNER JOIN customers c ON o.customerID = c.id
         |AND c.status = 'active'
-        |AND sum(o.numberOfProduct) = m.maximum""".stripMargin)
-    result.write.csv("result")
+        |AND o.sumProduct = m.maximum""".stripMargin)
+    result.coalesce(1).write.mode(SaveMode.Overwrite).csv(s"$outputPath")
   }
 }

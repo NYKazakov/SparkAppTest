@@ -14,9 +14,17 @@ val sparkVersion = "2.4.0"
 
 ThisBuild / libraryDependencies ++= Seq(
   ("org.apache.spark" %% "spark-core" % sparkVersion)
-    .exclude("org.apache.hadoop","hadoop-hdfs"),
+    .exclude("org.apache.hadoop","hadoop-hdfs")
+    .exclude("org.apache.hadoop","hadoop-common")
+    .exclude("org.apache.hadoop","hadoop-client")
+    .exclude("org.apache.hadoop","hadoop-auth")
+    .exclude("org.apache.hadoop","hadoop-annotations"),
   ("org.apache.spark" %% "spark-sql" % sparkVersion)
     .exclude("org.apache.hadoop","hadoop-hdfs")
+    .exclude("org.apache.hadoop","hadoop-common")
+    .exclude("org.apache.hadoop","hadoop-client")
+    .exclude("org.apache.hadoop","hadoop-auth")
+    .exclude("org.apache.hadoop","hadoop-annotations")
 )
 
 ThisBuild / assemblyMergeStrategy := {
@@ -38,6 +46,6 @@ ThisBuild / assemblyMergeStrategy := {
   case "git.properties" => MergeStrategy.last
   case "overview.html" => MergeStrategy.last  // Added this for 2.1.0 I think
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
 }

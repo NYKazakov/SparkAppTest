@@ -24,10 +24,10 @@ INNER JOIN department d ON a.dep_id = d.dep_id
 WHERE b.emp_id IS null
 
 5. 
-SELECT e.emp_name, e.job_name, e.dep_id, DATEDIFF(CURDATE(), e.hire_date) AS exp, grade FROM employees e, salary_grade
+SELECT e.emp_name, e.job_name, e.dep_id, (current_date - e.hire_date) AS exp, RANK() OVER(PARTITION BY e.dep_id ORDER BY e.hire_date) rank 
+FROM employees e, salary_grade
 WHERE min_sal <= e.salary
-AND max_sal >= e.salary
-ORDER BY exp DESC;
+AND max_sal >= e.salary;
 
 6. 
 SELECT COUNT(*), grade FROM salary_grade, employees e
